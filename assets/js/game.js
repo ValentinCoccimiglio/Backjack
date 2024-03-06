@@ -13,6 +13,7 @@ let puntosJugador = 0,
 //Refes de html
 const btnPedir = document.querySelector('#btnPedir');
 const puntosHtml = document.querySelectorAll('small');
+const divCartasJugador = document.querySelector('#jugador-carta')
 
 
 //Crea nuevo deck
@@ -39,15 +40,13 @@ crearDeck();
 
 //esta funcion permite tomar una carta
 const pedirCarta = () => {
-
+    if ( deck.length === 0 ) {
+        throw 'No hay cartas en el deck';
+    }
     const carta = deck.pop();
-
-    console.log(deck);
-    console.log(carta);
     return carta;
 };
-
-pedirCarta(); 
+ 
 
 const valorCarta = ( carta ) => {
     const valor = carta.substring(0, carta.length - 1);
@@ -59,9 +58,26 @@ const valorCarta = ( carta ) => {
 
 //Eventos
 btnPedir.addEventListener('click', function() {
+
     const carta = pedirCarta();
+
     puntosJugador = puntosJugador + valorCarta(carta);
     puntosHtml [0].innerText = puntosJugador;
+
+    const imgCarta = document.createElement('img');
+    imgCarta.src = `assets/cards/${ carta }.png`;
+    imgCarta.classList.add('carta');
+    divCartasJugador.append (imgCarta);
+
+    if (puntosJugador > 21) {
+        console.warn('Te pasaste de 21');
+        btnPedir.disabled = true;
+    
+
+    } else if (puntosJugador === 21) {
+        console.warn('21, Genial!');
+        btnPedir.disabled = true;
+    }
 
 
 });
